@@ -1,0 +1,25 @@
+@model CarWashOps.Models.Wash
+@{
+    ViewData["Title"] = "Wash Details";
+}
+
+<div class="page-head">
+    <div><h1>@Model.CarName</h1><p>Wash #@Model.CarId</p></div>
+</div>
+
+<div class="form-card">
+    <dl class="row mb-0">
+        <dt class="col-sm-4">License Plate</dt><dd class="col-sm-8">@(Model.LicensePlate ?? "—")</dd>
+        <dt class="col-sm-4">Wash Date</dt><dd class="col-sm-8">@Model.WashDate.ToString("dd MMM yyyy")</dd>
+        <dt class="col-sm-4">Wash Time</dt><dd class="col-sm-8">@Model.WashTime.ToString(@"hh\:mm")</dd>
+        <dt class="col-sm-4">Service Type</dt><dd class="col-sm-8">@(Model.ServiceType ?? "—")</dd>
+        <dt class="col-sm-4">Price</dt><dd class="col-sm-8">R@Model.Price.ToString("N2")</dd>
+        <dt class="col-sm-4">Status</dt><dd class="col-sm-8"><span class="pill @Model.Status.ToLower().Replace(" ", "-")">@Model.Status</span></dd>
+        <dt class="col-sm-4">Employee Responsible</dt><dd class="col-sm-8">@(Model.Employee?.EmployeeName ?? "Unassigned")</dd>
+        <dt class="col-sm-4">Client</dt><dd class="col-sm-8">@(Model.Client?.ClientName ?? "Walk-in")</dd>
+    </dl>
+    <div class="d-flex gap-2 mt-4">
+        <a class="btn btn-outline-secondary" asp-action="Index">Back to Wash Log</a>
+        <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.CarId">Edit</a>
+    </div>
+</div>

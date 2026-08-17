@@ -1,0 +1,94 @@
+@model CarWashOps.Controllers.DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="page-head">
+    <div>
+        <h1>Today's Operations</h1>
+        <p>@DateTime.Today.ToString("dddd, d MMMM yyyy") &middot; live view of the wash bay</p>
+    </div>
+    <a class="btn btn-primary" asp-controller="Washes" asp-action="Create">+ Log a Wash</a>
+</div>
+
+<div class="stat-row">
+    <div class="stat-card">
+        <div class="stat-label">Washes Today</div>
+        <div class="stat-value">@Model.WashesToday</div>
+        <div class="stat-sub">across all bays</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Revenue Today</div>
+        <div class="stat-value">R@Model.RevenueToday.ToString("N0")</div>
+        <div class="stat-sub">from @Model.WashesToday logged jobs</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Active Employees</div>
+        <div class="stat-value">@Model.ActiveEmployees</div>
+        <div class="stat-sub">on shift right now</div>
+    </div>
+    <div class="stat-card @(Model.Waiting.Count > 2 ? "warn" : "")">
+        <div class="stat-label">Cars Waiting</div>
+        <div class="stat-value">@Model.Waiting.Count</div>
+        <div class="stat-sub">@Model.TotalClients clients on file</div>
+    </div>
+</div>
+
+<div class="bay-board">
+    <h3>Bay Board</h3>
+    <div class="bays">
+        @foreach (var w in Model.InProgress)
+        {
+            <div class="bay in-progress">
+                <div class="bay-status">In Progress</div>
+                <div class="bay-car">@w.CarName</div>
+                <div class="bay-meta">@w.WashTime.ToString(@"hh\:mm") &middot; @(w.Employee?.EmployeeName ?? "Unassigned")</div>
+            </div>
+        }
+        @foreach (var w in Model.Waiting)
+        {
+            <div class="bay waiting">
+                <div class="bay-status">Waiting</div>
+                <div class="bay-car">@w.CarName</div>
+                <div class="bay-meta">Booked @w.WashTime.ToString(@"hh\:mm")</div>
+            </div>
+        }
+        @if (!Model.InProgress.Any() && !Model.Waiting.Any())
+        {
+            <div class="bay-empty">No cars currently in the bay — log a wash to get started.</div>
+        }
+    </div>
+</div>
+
+<div class="panel">
+    <div class="panel-head"><h2>Recent Activity</h2></div>
+    @if (!Model.RecentWashes.Any())
+    {
+        <div class="p-4 text-muted fst-italic">No washes logged yet.</div>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Car</th><th>Time</th><th>Service</th><th>Price</th>
+                    <th>Employee</th><th>Client</th><th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var w in Model.RecentWashes)
+                {
+                    <tr>
+                        <td>@w.CarName</td>
+                        <td>@w.WashTime.ToString(@"hh\:mm")</td>
+                        <td>@(w.ServiceType ?? "—")</td>
+                        <td>R@w.Price.ToString("N0")</td>
+                        <td>@(w.Employee?.EmployeeName ?? "Unassigned")</td>
+                        <td>@(w.Client?.ClientName ?? "Walk-in")</td>
+                        <td><span class="pill @w.Status.ToLower().Replace(" ", "-")">@w.Status</span></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

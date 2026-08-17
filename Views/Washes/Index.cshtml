@@ -1,0 +1,51 @@
+@model IEnumerable<CarWashOps.Models.Wash>
+@{
+    ViewData["Title"] = "Wash Log";
+}
+
+<div class="page-head">
+    <div>
+        <h1>Wash Log</h1>
+        <p>Every car that's come through — CarID, name, time and employee responsible.</p>
+    </div>
+    <a class="btn btn-primary" asp-action="Create">+ Log a Wash</a>
+</div>
+
+<div class="panel">
+    @if (!Model.Any())
+    {
+        <div class="p-4 text-muted fst-italic">No washes logged yet — add the first one.</div>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th><th>Car</th><th>Plate</th><th>Date</th><th>Time</th>
+                    <th>Service</th><th>Price</th><th>Employee</th><th>Client</th><th>Status</th><th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var w in Model)
+                {
+                    <tr>
+                        <td>#@w.CarId</td>
+                        <td>@w.CarName</td>
+                        <td>@(w.LicensePlate ?? "—")</td>
+                        <td>@w.WashDate.ToString("dd MMM")</td>
+                        <td>@w.WashTime.ToString(@"hh\:mm")</td>
+                        <td>@(w.ServiceType ?? "—")</td>
+                        <td>R@w.Price.ToString("N0")</td>
+                        <td>@(w.Employee?.EmployeeName ?? "Unassigned")</td>
+                        <td>@(w.Client?.ClientName ?? "Walk-in")</td>
+                        <td><span class="pill @w.Status.ToLower().Replace(" ", "-")">@w.Status</span></td>
+                        <td class="text-end">
+                            <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@w.CarId">Edit</a>
+                            <a class="btn btn-sm btn-outline-danger" asp-action="Delete" asp-route-id="@w.CarId">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

@@ -1,0 +1,40 @@
+@model IEnumerable<CarWashOps.Models.Client>
+@{
+    ViewData["Title"] = "Clients";
+}
+
+<div class="page-head">
+    <div><h1>Clients</h1><p>Contact info and vehicle details for repeat customers.</p></div>
+    <a class="btn btn-primary" asp-action="Create">+ Add Client</a>
+</div>
+
+<div class="panel">
+    @if (!Model.Any())
+    {
+        <div class="p-4 text-muted fst-italic">No clients yet — add your first client.</div>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr><th>ID</th><th>Name</th><th>Phone</th><th>Email</th><th>Plate</th><th></th></tr>
+            </thead>
+            <tbody>
+                @foreach (var c in Model)
+                {
+                    <tr>
+                        <td>#@c.ClientId</td>
+                        <td>@c.ClientName</td>
+                        <td>@(c.Phone ?? "—")</td>
+                        <td>@(c.Email ?? "—")</td>
+                        <td>@(c.LicensePlate ?? "—")</td>
+                        <td class="text-end">
+                            <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@c.ClientId">Edit</a>
+                            <a class="btn btn-sm btn-outline-danger" asp-action="Delete" asp-route-id="@c.ClientId">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

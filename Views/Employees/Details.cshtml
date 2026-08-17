@@ -1,0 +1,19 @@
+@model CarWashOps.Models.Employee
+@{
+    ViewData["Title"] = "Employee Details";
+}
+
+<div class="page-head"><div><h1>@Model.EmployeeName</h1><p>Employee #@Model.EmployeeNum</p></div></div>
+
+<div class="form-card">
+    <dl class="row mb-0">
+        <dt class="col-sm-4">Service Type</dt><dd class="col-sm-8">@Model.ServiceType</dd>
+        <dt class="col-sm-4">Phone</dt><dd class="col-sm-8">@(Model.Phone ?? "—")</dd>
+        <dt class="col-sm-4">Status</dt><dd class="col-sm-8">@Model.Status</dd>
+        <dt class="col-sm-4">Washes Handled</dt><dd class="col-sm-8">@(Model.Washes?.Count ?? 0)</dd>
+    </dl>
+    <div class="d-flex gap-2 mt-4">
+        <a class="btn btn-outline-secondary" asp-action="Index">Back to Employees</a>
+        <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.EmployeeNum">Edit</a>
+    </div>
+</div>

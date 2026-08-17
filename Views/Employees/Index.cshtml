@@ -1,0 +1,42 @@
+@model IEnumerable<CarWashOps.Models.Employee>
+@{
+    ViewData["Title"] = "Employees";
+}
+
+<div class="page-head">
+    <div><h1>Employees</h1><p>EmployeeNum, name and service type for everyone on the team.</p></div>
+    <a class="btn btn-primary" asp-action="Create">+ Add Employee</a>
+</div>
+
+<div class="panel">
+    @if (!Model.Any())
+    {
+        <div class="p-4 text-muted fst-italic">No employees yet — add your first team member.</div>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr><th>Num</th><th>Name</th><th>Service Type</th><th>Phone</th><th>Status</th><th></th></tr>
+            </thead>
+            <tbody>
+                @foreach (var e in Model)
+                {
+                    <tr>
+                        <td>#@e.EmployeeNum</td>
+                        <td>@e.EmployeeName</td>
+                        <td>@e.ServiceType</td>
+                        <td>@(e.Phone ?? "—")</td>
+                        <td>
+                            <span class="pill @(e.Status == "Active" ? "done" : e.Status == "Off Shift" ? "waiting" : "in-progress")">@e.Status</span>
+                        </td>
+                        <td class="text-end">
+                            <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@e.EmployeeNum">Edit</a>
+                            <a class="btn btn-sm btn-outline-danger" asp-action="Delete" asp-route-id="@e.EmployeeNum">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
